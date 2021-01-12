@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Travel</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <!-- 구글폰트 -->
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic+Coding:wght@700&family=Noto+Sans+KR:wght@300&display=swap"
+              rel="stylesheet">
+        <style>
+            * {
+                font-family: 'Noto Sans KR', sans-serif;
+            }
+
+            .hero-head {
+                width: 1400px;
+                margin: auto;
+
+            }
+
+            .field {
+                width: 600px;
+                height: 10px;
+                margin: auto;
+            }
+
+            .wrap {
+                width: 1200px;
+                margin: 80px auto;
+
+            }
+
+            p {
+                text-align: center;
+            }
+
+            .margin {
+                margin-bottom: 300px;
+            }
+
+        </style>
+        <script>
+            $(document).ready(function () {
+                showThemes();
+            });
+
+
+            function showThemes() {
+                $.ajax({
+                    type: "GET",
+                    url: "/new_theme",
+                    data: {},
+                    success: function (response) {
+                        if (response['result'] == 'success') {
+                            let themes = response["new_theme"];
+                            console.log(themes);
+                            for (let i = 0; i < themes.length; i++) {
+                                makeThemeCard(themes[i]["name"], themes[i]["emoji"], themes[i]["spot1"], themes[i]["spot2"], themes[i]["spot3"])
+                            }
+                        }
+                    }
+                })
+            }
+
+            function makeThemeCard(name, emoji, spot1, spot2, spot3) {
+                let tempHtml = `<div class="tile is-parent">
+                                    <article class="tile is-child box">
+                                        <p class="subtitle">${emoji}</p>
+                                        <p class="subtitle has-text-black">${name}Bar</p>
+                                    </article>
+                                </div>`;
+                console.log(tempHtml);
+
+                $('#theme-card').append(tempHtml);
+            }
+        </script>
+    </head>
+
+    <body>
+        <section class="hero is-warning is-medium">
+            <div class="hero-head">
+                <nav class="navbar">
+                    <div class="navbar-end">
+                        <div class="navbar-item">
+                            <div onclick="location.href = '/new_theme'" class="buttons">
+                                <a class="button is-primary">
+                                    <strong>새로운 테마 만들기</strong>
+                                </a>
+
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+            <div class="hero-body">
+                <div class="container has-text-centered" style="margin-bottom: 100px;">
+                    <h2 class="subtitle">
+                        지금 바로 떠나자!
+                    </h2>
+                    <h1 class="title is-size-1">
+                        테마 여행
+                    </h1>
+
+                </div>
+                <div class="field is-grouped">
+                    <p class="control is-expanded">
+                        <input class="input is-rounded" type="text" placeholder="어떤 여행을 떠나고 싶나요?">
+                    </p>
+                    <p class="control">
+                        <a class="button is-success">
+                            찾기
+                        </a>
+                    </p>
+                </div>
+            </div>
+            <div class="wrap">
+                <div class="container">
+                    <div id="theme-card" class="tile is-ancestor">
+                        <div class="tile is-parent">
+                            <article class="tile is-child box">
+                                <p class="subtitle">💛💛</p>
+                                <p class="subtitle has-text-black">What is up?</p>
+                            </article>
+                        </div>
+                        <div class="tile is-parent">
+                            <article class="tile is-child box">
+                                <p class="subtitle">💛💛</p>
+                                <p class="subtitle has-text-black">Bar</p>
+                            </article>
+                        </div>
+                        <div class="tile is-parent">
+                            <article class="tile is-child box">
+                                <p class="subtitle">💌</p>
+                                <p class="subtitle has-text-black">Bar</p>
+                            </article>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="margin"></div>
+        </section>
+    </body>
+</html>
