@@ -6,10 +6,10 @@
         <title>Travel</title>
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <!-- 카카오지도 -->
         <script type="text/javascript"
                 src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ef40c66fba33237283cfb59ce3a907aa">
         </script>
+
         <!-- 구글폰트 -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic+Coding:wght@700&family=Noto+Sans+KR:wght@300&display=swap"
@@ -49,14 +49,13 @@
         <script>
             $(document).ready(function () {
                 showThemes();
-
             });
 
 
             function showThemes() {
                 $.ajax({
                     type: "GET",
-                    url: "/themes",
+                    url: "/theme",
                     data: {},
                     success: function (response) {
                         if (response['result'] == 'success') {
@@ -70,7 +69,6 @@
                 })
             }
 
-
             function showDetail(name) {
                 $.ajax({
                     type: "GET",
@@ -81,7 +79,7 @@
                             let container = document.getElementById('map'); //지도 표시 div
                             let options = {
                                 center: new kakao.maps.LatLng(37.547039703021895, 126.91316778932088), //지도의 중심좌표
-                                level: 13 //지도의 확대 레벨
+                                level: 4 //지도의 확대 레벨
                             };
 
                             let map = new kakao.maps.Map(container, options); // 지도를 생성합니다
@@ -89,8 +87,15 @@
                             // 마커를 표시할 위치와 title 객체 배열입니다
                             let positions = [
                                 {
-                                    content: '<div style="padding:5px;">${spot1}</div>',
-                                    latlng: new kakao.maps.LatLng(${spot1_lat}, ${spot1_lng})
+                                    content: '<div class="wrap">' +
+                                            '    <div class="info">' +
+                                            '<div class="title">' +
+                                            '문데이 합정점' +
+                                            '<div class="close" onclick="closeOverlay()" title="닫기"></div>' +
+                                            '</div>' +
+                                            '</div>' +
+                                            '</div>',
+                                    latlng: new kakao.maps.LatLng(37.54587621050993, 126.9140139977622)
                                 },
                                 {
                                     content: '<div style="padding:5px;">화규 합정점</div>',
@@ -100,7 +105,10 @@
                                     content: '<div style="padding:5px;">냉장고 상수점</div>',
                                     latlng: new kakao.maps.LatLng(37.546727289228386, 126.9227342400898)
                                 },
-
+                                {
+                                    content: '<div style="padding:5px;">스미비부타동 상수점</div>',
+                                    latlng: new kakao.maps.LatLng(37.54957557560878, 126.92223665543467)
+                                }
                             ];
 
                             // 마커 이미지의 이미지 주소입니다
@@ -155,8 +163,7 @@
                 let tempHtml = `<div class="tile is-parent" onclick="showDetail('${name}')">
                                     <article class="tile is-child box">
                                         <p class="subtitle">${emoji}</p>
-                                        <p class="subtitle has-text-black">${name}
-                                        </p>
+                                        <p class="subtitle has-text-black">${name}Bar</p>
                                     </article>
                                 </div>`;
                 console.log(tempHtml);
@@ -204,7 +211,7 @@
                 </div>
             </div>
             <div class="wrap">
-                <div class="container is-multiline">
+                <div class="container">
                     <div id="theme-card" class="tile is-ancestor">
                         <!--?<div class="tile is-parent">
                             <article class="tile is-child box">
@@ -229,7 +236,6 @@
                 </div>
             </div>
             <div id="map" style="width:1500px;height:740px;margin:auto;"></div>
-
             <div class="margin"></div>
         </section>
     </body>

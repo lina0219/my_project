@@ -2,213 +2,201 @@
 <html>
     <head>
         <meta charset="utf-8">
-        <title>키워드로 장소검색하고 목록으로 표출하기</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Travel</title>
+
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+        <!-- 구글폰트 -->
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic+Coding:wght@700&family=Noto+Sans+KR:wght@300&display=swap"
+              rel="stylesheet">
         <style>
-            .map_wrap, .map_wrap * {
-                margin: 0;
-                padding: 0;
-                font-family: 'Malgun Gothic', dotum, '돋움', sans-serif;
-                font-size: 12px;
-            }
-
-            .map_wrap a, .map_wrap a:hover, .map_wrap a:active {
-                color: #000;
-                text-decoration: none;
-            }
-
-            .map_wrap {
-                position: relative;
+            html {
+                height: 100%;
                 width: 100%;
-                height: 500px;
             }
 
-            #menu_wrap {
-                position: absolute;
-                top: 0;
-                left: 0;
-                bottom: 0;
-                width: 250px;
-                margin: 10px 0 30px 10px;
-                padding: 5px;
-                overflow-y: auto;
-                background: rgba(255, 255, 255, 0.7);
-                z-index: 1;
-                font-size: 12px;
-                border-radius: 10px;
+            * {
+                font-family: 'Noto Sans KR', sans-serif;
             }
 
-            .bg_white {
-                background: #fff;
-            }
-
-            #menu_wrap hr {
-                display: block;
-                height: 1px;
-                border: 0;
-                border-top: 2px solid #5F5F5F;
-                margin: 3px 0;
-            }
-
-            #menu_wrap .option {
-                text-align: center;
-            }
-
-            #menu_wrap .option p {
-                margin: 10px 0;
-            }
-
-            #menu_wrap .option button {
-                margin-left: 5px;
-            }
-
-            #placesList li {
-                list-style: none;
-            }
-
-            #placesList .item {
-                position: relative;
-                border-bottom: 1px solid #888;
-                overflow: hidden;
-                cursor: pointer;
-                min-height: 65px;
-            }
-
-            #placesList .item span {
-                display: block;
-                margin-top: 4px;
-            }
-
-            #placesList .item h5, #placesList .item .info {
-                text-overflow: ellipsis;
-                overflow: hidden;
-                white-space: nowrap;
-            }
-
-            #placesList .item .info {
-                padding: 10px 0 10px 55px;
-            }
-
-            #placesList .info .gray {
-                color: #8a8a8a;
-            }
-
-            #placesList .info .jibun {
-                padding-left: 26px;
-                background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/places_jibun.png) no-repeat;
-            }
-
-            #placesList .info .tel {
-                color: #009900;
-            }
-
-            #placesList .item .markerbg {
-                float: left;
-                position: absolute;
-                width: 36px;
-                height: 37px;
-                margin: 10px 0 0 10px;
-                background: url(https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_number_blue.png) no-repeat;
-            }
-
-            #placesList .item .marker_1 {
-                background-position: 0 -10px;
-            }
-
-            #placesList .item .marker_2 {
-                background-position: 0 -56px;
-            }
-
-            #placesList .item .marker_3 {
-                background-position: 0 -102px
-            }
-
-            #placesList .item .marker_4 {
-                background-position: 0 -148px;
-            }
-
-            #placesList .item .marker_5 {
-                background-position: 0 -194px;
-            }
-
-            #placesList .item .marker_6 {
-                background-position: 0 -240px;
-            }
-
-            #placesList .item .marker_7 {
-                background-position: 0 -286px;
-            }
-
-            #placesList .item .marker_8 {
-                background-position: 0 -332px;
-            }
-
-            #placesList .item .marker_9 {
-                background-position: 0 -378px;
-            }
-
-            #placesList .item .marker_10 {
-                background-position: 0 -423px;
-            }
-
-            #placesList .item .marker_11 {
-                background-position: 0 -470px;
-            }
-
-            #placesList .item .marker_12 {
-                background-position: 0 -516px;
-            }
-
-            #placesList .item .marker_13 {
-                background-position: 0 -562px;
-            }
-
-            #placesList .item .marker_14 {
-                background-position: 0 -608px;
-            }
-
-            #placesList .item .marker_15 {
-                background-position: 0 -654px;
-            }
-
-            #pagination {
+            .wrap {
+                width: 700px;
                 margin: 10px auto;
-                text-align: center;
+
             }
 
-            #pagination a {
-                display: inline-block;
-                margin-right: 10px;
+            #button {
+                width: 100px;
+                height: 53px;
+                margin: 50px auto;
             }
 
-            #pagination .on {
-                font-weight: bold;
-                cursor: default;
-                color: #777;
-            }
+
         </style>
-    </head>
-    <body>
-        <div class="map_wrap">
-            <div id="map" style="width:100%;height:100%;position:relative;overflow:hidden;"></div>
+        <script>
 
-            <div id="menu_wrap" class="bg_white">
-                <div class="option">
-                    <div>
-                        <form onsubmit="searchPlaces(); return false;">
-                            키워드 : <input type="text" value="이태원 맛집" id="keyword" size="15">
-                            <button type="submit">검색하기</button>
-                        </form>
+            function get1() {
+                $('#spot1').val(lat);
+            }
+
+            function get2() {
+                $('#spot2').val(lat);
+            }
+
+            function formCheck() {
+                let name = $('#name').val();
+                let emoji = $('#emoji').val();
+                let spot1 = $('#spot1').val();
+                let spot2 = $('#spot2').val();
+                let spot3 = $('#spot3').val();
+
+
+                if (name == '') {
+                    alert('이름을 적어주세요✏')
+                    return
+                } else if (emoji == 'none') {
+                    alert('이모지를 골라주세요🎈')
+                    return
+                } else if (spot1 == '') {
+                    alert('여행지를 적어주세요🚎')
+                    return
+                } else if (spot2 == '') {
+                    alert('여행지를 적어주세요🚎')
+                    return
+                } else if (spot3 == '') {
+                    alert('여행지를 적어주세요🚎')
+                    return
+                } else {
+                    alert('성공적으로 등록되었습니다!👏')
+
+                }
+                $.ajax({
+                    type: "POST",
+                    url: "/theme",
+                    data: {name: name, emoji: emoji, spot1: spot1, spot2: spot2, spot3: spot3},
+                    success: function (response) { // 성공하면
+                        if (response["result"] == "success") {
+                            window.location.reload();
+                        }
+                    }
+                })
+            }
+
+        </script>
+    </head>
+
+
+    <body>
+        <section class="hero is-warning is-small" style="height: 100%">
+            <div class="hero-body" style="margin-top:140px" ;>
+                <div class="container has-text-centered" style="margin-bottom: 100px;">
+                    <h1 class="title is-size-1">
+                        나의 여행 테마 만들기
+                    </h1>
+                </div>
+            </div>
+            <div class="wrap">
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">테마 이름</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input id="name" class="input" type="text" placeholder="">
+                            </div>
+                        </div>
                     </div>
                 </div>
-                <hr>
-                <ul id="placesList"></ul>
-                <div id="pagination"></div>
-            </div>
-        </div>
 
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">이모지</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field is-narrow">
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select id="emoji">
+                                        <option value="none">선택</option>
+                                        <option value="😀">😀</option>
+                                        <option value="😁">😁</option>
+                                        <option value="😂">😂</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label" onclick="get1()">여행지 1</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <form onsubmit="searchPlaces(); return false;">
+
+
+                                    <input id="spot1" class="input" type="text" placeholder="" value="이태원 맛집"
+                                           id="keyword">
+                                    <p class="control">
+                                        <button class="button" type="submit">검색
+                                        </button>
+                                    </p>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">여행지 2</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input id="spot2" class="input" type="text" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field is-horizontal">
+                    <div class="field-label is-normal">
+                        <label class="label">여행지 3</label>
+                    </div>
+                    <div class="field-body">
+                        <div class="field">
+                            <div class="control">
+                                <input id="spot3" class="input" type="text" placeholder="">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="map" style="width:650px;height:400px;margin:auto;"></div>
+                <div id="button" class="field is-grouped">
+                    <p class="control">
+                        <button onclick="formCheck()" class="button is-info">
+                            등록하기
+                        </button>
+                    </p>
+                    <p class="control">
+                        <button onclick="location.href = '/'" class="button">
+                            돌아가기
+                        </button>
+                    </p>
+
+                </div>
+            </div>
+        </section>
         <script type="text/javascript"
-                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=발급받은 APP KEY를 사용하세요&libraries=services"></script>
+                src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ef40c66fba33237283cfb59ce3a907aa&libraries=services"></script>
         <script>
+
+
             // 마커를 담을 배열입니다
             var markers = [];
 

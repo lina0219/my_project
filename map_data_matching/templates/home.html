@@ -64,6 +64,7 @@
                             console.log(themes);
                             for (let i = 0; i < themes.length; i++) {
                                 makeThemeCard(themes[i]["name"], themes[i]["emoji"], themes[i]["spot1"], themes[i]["spot2"], themes[i]["spot3"])
+                                showMap(themes[i]["spot1"], themes[i]["spot1_lat"], themes[i]["spot1_lng"], themes[i]["spot2"], themes[i]["spot2_lat"], themes[i]["spot2_lng"], themes[i]["spot3"],  themes[i]["spot3_lat"], themes[i]["spot3_lng"])
                             }
                         }
                     }
@@ -71,37 +72,36 @@
             }
 
 
-            function showDetail(name) {
+            function showMap(spot1,spot1_lat,spot1_lng,spot2,spot2_lat,spot2_lng,spot3,spot3_lat,spot3_lng ) {
                 $.ajax({
                     type: "GET",
-                    url: "/detail",
-                    data: {name: name},
+                    url: "/themes",
+                    data: {},
                     success: function (response) {
                         if (response['result'] == 'success') {
                             let container = document.getElementById('map'); //지도 표시 div
                             let options = {
                                 center: new kakao.maps.LatLng(37.547039703021895, 126.91316778932088), //지도의 중심좌표
-                                level: 13 //지도의 확대 레벨
+                                level: 1 //지도의 확대 레벨
                             };
 
                             let map = new kakao.maps.Map(container, options); // 지도를 생성합니다
 
                             // 마커를 표시할 위치와 title 객체 배열입니다
-                            let positions = [
+                            let positions = `[
                                 {
                                     content: '<div style="padding:5px;">${spot1}</div>',
                                     latlng: new kakao.maps.LatLng(${spot1_lat}, ${spot1_lng})
                                 },
                                 {
-                                    content: '<div style="padding:5px;">화규 합정점</div>',
-                                    latlng: new kakao.maps.LatLng(37.549219152218036, 126.91748776892605)
+                                    content: '<div style="padding:5px;">${spot2}</div>',
+                                    latlng: new kakao.maps.LatLng(${spot2_lat}, ${spot2_lng})
                                 },
                                 {
-                                    content: '<div style="padding:5px;">냉장고 상수점</div>',
-                                    latlng: new kakao.maps.LatLng(37.546727289228386, 126.9227342400898)
-                                },
-
-                            ];
+                                    content: '<div style="padding:5px;">${spot3}</div>',
+                                    latlng: new kakao.maps.LatLng(${spot3_lat}, ${spot3_lng})
+                                }
+                            ];`
 
                             // 마커 이미지의 이미지 주소입니다
                             let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
@@ -151,8 +151,8 @@
                 })
             }
 
-            function makeThemeCard(name, emoji, spot1, spot2, spot3) {
-                let tempHtml = `<div class="tile is-parent" onclick="showDetail('${name}')">
+            function makeThemeCard(name, emoji) {
+                let tempHtml = `<div class="tile is-parent" onclick="showMap('${name}')">
                                     <article class="tile is-child box">
                                         <p class="subtitle">${emoji}</p>
                                         <p class="subtitle has-text-black">${name}

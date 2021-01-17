@@ -8,16 +8,12 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
+
         <!-- 구글폰트 -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic+Coding:wght@700&family=Noto+Sans+KR:wght@300&display=swap"
               rel="stylesheet">
         <style>
-            html {
-                height: 100%;
-                width: 100%;
-            }
-
             * {
                 font-family: 'Noto Sans KR', sans-serif;
             }
@@ -39,32 +35,19 @@
         <script>
 
             function get1() {
-                $('#spot1-lat').val(lat);
-                $('#spot1-lng').val(lng);
+                $('#spot1').val(lat);
             }
 
             function get2() {
-                $('#spot2-lat').val(lat);
-                $('#spot2-lng').val(lat);
-            }
-
-            function get3() {
-                $('#spot3-lat').val(lat);
-                $('#spot3-lng').val(lat);
+                $('#spot2').val(lat);
             }
 
             function formCheck() {
                 let name = $('#name').val();
                 let emoji = $('#emoji').val();
                 let spot1 = $('#spot1').val();
-                let spot1_lat = $('#spot1-lat').val();
-                let spot1_lng = $('#spot1-lng').val();
                 let spot2 = $('#spot2').val();
-                let spot2_lat = $('#spot2-lat').val();
-                let spot2_lng = $('#spot2-lng').val();
                 let spot3 = $('#spot3').val();
-                let spot3_lat = $('#spot3-lat').val();
-                let spot3_lng = $('#spot3-lng').val();
 
 
                 if (name == '') {
@@ -88,21 +71,9 @@
                 }
                 $.ajax({
                     type: "POST",
-                    url: "/themes",
-                    data: {
-                        name: name,
-                        emoji: emoji,
-                        spot1: spot1,
-                        spot1_lat: spot1_lat,
-                        spot1_lng: spot1_lng,
-                        spot2: spot2,
-                        spot2_lat: spot2_lat,
-                        spot2_lng: spot2_lng,
-                        spot3: spot3,
-                        spot3_lat: spot3_lat,
-                        spot3_lng: spot3_lng
-                    },
-                    success: function (response) {
+                    url: "/theme",
+                    data: {name: name, emoji: emoji, spot1: spot1, spot2: spot2, spot3: spot3},
+                    success: function (response) { // 성공하면
                         if (response["result"] == "success") {
                             window.location.reload();
                         }
@@ -115,14 +86,15 @@
 
 
     <body>
-        <section class="hero is-warning is-small" style="height: 100%">
-            <div class="hero-body" style="margin-top:140px" ;>
+        <section class="hero is-warning is-small">
+            <div class="hero-body" style="margin-top:140px">
                 <div class="container has-text-centered" style="margin-bottom: 100px;">
                     <h1 class="title is-size-1">
                         나의 여행 테마 만들기
                     </h1>
                 </div>
             </div>
+            <div id="map" style="width:1500px;height:740px;margin:auto;"></div>
             <div class="wrap">
                 <div class="field is-horizontal">
                     <div class="field-label is-normal">
@@ -161,44 +133,22 @@
                         <label class="label" onclick="get1()">여행지 1</label>
                     </div>
                     <div class="field-body">
-                        <div class="field is-horizontal">
+                        <div class="field">
                             <div class="control">
                                 <input id="spot1" class="input" type="text" placeholder="">
                             </div>
-                            <div class="control">
-                                <input id="spot1-lat" class="input" type="text" placeholder="">
-                            </div>
-                            <div class="control">
-                                <input id="spot1-lng" class="input lng" type="text" placeholder="">
-                            </div>
-                            <p class="control">
-                                <button class="button is-info" onclick="get1()">
-                                    확인
-                                </button>
-                            </p>
                         </div>
                     </div>
                 </div>
                 <div class="field is-horizontal">
                     <div class="field-label is-normal">
-                        <label class="label">여행지 2</label>
+                        <label class="label" onclick="get2()">여행지 2</label>
                     </div>
                     <div class="field-body">
-                        <div class="field is-horizontal">
+                        <div class="field">
                             <div class="control">
                                 <input id="spot2" class="input" type="text" placeholder="">
                             </div>
-                            <div class="control">
-                                <input id="spot2-lat" class="input" type="text" placeholder="">
-                            </div>
-                            <div class="control">
-                                <input id="spot2-lng" class="input lng" type="text" placeholder="">
-                            </div>
-                            <p class="control">
-                                <button class="button is-info" onclick="get2()">
-                                    확인
-                                </button>
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -207,25 +157,13 @@
                         <label class="label">여행지 3</label>
                     </div>
                     <div class="field-body">
-                        <div class="field is-horizontal">
+                        <div class="field">
                             <div class="control">
                                 <input id="spot3" class="input" type="text" placeholder="">
                             </div>
-                            <div class="control">
-                                <input id="spot3-lat" class="input" type="text" placeholder="">
-                            </div>
-                            <div class="control">
-                                <input id="spot3-lng" class="input lng" type="text" placeholder="">
-                            </div>
-                            <p class="control">
-                                <button class="button is-info" onclick="get3()">
-                                    확인
-                                </button>
-                            </p>
                         </div>
                     </div>
                 </div>
-                <div id="map" style="width:650px;height:400px;margin:auto;"></div>
                 <div id="button" class="field is-grouped">
                     <p class="control">
                         <button onclick="formCheck()" class="button is-info">
@@ -234,32 +172,29 @@
                     </p>
                     <p class="control">
                         <button onclick="location.href = '/'" class="button">
-                            돌아가기
+                            취소
                         </button>
                     </p>
 
                 </div>
             </div>
         </section>
+
         <script type="text/javascript"
                 src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ef40c66fba33237283cfb59ce3a907aa"></script>
         <script>
             let lat, lng; // Irvin: 전역 변수 선언
-            let mapContainer = document.getElementById('map'), // 지도를 표시할 div
+            var mapContainer = document.getElementById('map'), // 지도를 표시할 div
                 mapOption = {
                     center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
                     level: 3 // 지도의 확대 레벨
                 };
 
-            let map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
+            var map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
 
-
-            // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
-            var zoomControl = new kakao.maps.ZoomControl();
-            map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
 
             // 지도를 클릭한 위치에 표출할 마커입니다
-            let marker = new kakao.maps.Marker({
+            var marker = new kakao.maps.Marker({
                 // 지도 중심좌표에 마커를 생성합니다
                 position: map.getCenter()
             });
@@ -271,7 +206,7 @@
             kakao.maps.event.addListener(map, 'click', function (mouseEvent) {
 
                 // 클릭한 위도, 경도 정보를 가져옵니다
-                let latlng = mouseEvent.latLng;
+                var latlng = mouseEvent.latLng;
 
                 // 마커 위치를 클릭한 위치로 옮깁니다
                 marker.setPosition(latlng);
@@ -287,6 +222,13 @@
             });
 
 
+            // 지도에 컨트롤을 추가해야 지도위에 표시됩니다
+            // kakao.maps.ControlPosition은 컨트롤이 표시될 위치를 정의하는데 TOPRIGHT는 오른쪽 위를 의미합니다
+            map.addControl(mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+
+            // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+            var zoomControl = new kakao.maps.ZoomControl();
+            map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
         </script>
     </body>
 </html>
