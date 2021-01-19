@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+    </head>
+    <body>
+
+
+        <div class="field is-horizontal">
+            <div class="field-label is-normal">
+                <label class="label">이모지</label>
+            </div>
+            <div class="field-body">
+                <div class="field is-horizontal">
+                    <div class="control">
+                        <input type="text" placeholder="">
+                    </div>
+                    <p class="control">
+                        <button class="button is-info" >
+                            확인
+                        </button>
+                    </p>
+                </div>
+
+
+            </div>
+        </div>
+        </div>
+        <script src="fgEmojiPicker.js"></script>
+        <script>
+            new FgEmojiPicker({
+                trigger: ['button'],
+                position: ['bottom', 'right'],
+                preFetch: true,
+                insertInto: document.querySelector('input'),
+                emit(obj, triggerElement) {
+                    console.log(obj, triggerElement);
+                }
+            });
+        </script>
+    </body>
+</html>

@@ -4,6 +4,9 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Travel</title>
+        <meta property="og:title" content="나만의 여행 큐레이션"/>
+        <meta property="og:description" content="원하는 여행을 골라서 떠나보세요! 내 스타일대로, 내 마음대로 여행 코스를 만들어서 공유해보아요."/>
+        <!--<meta property="og:image" content="{{ url_for('static', filename='') }}"/>-->
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <!-- 카카오지도 -->
@@ -12,11 +15,12 @@
         </script>
         <!-- 구글폰트 -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic+Coding:wght@700&family=Noto+Sans+KR:wght@300&display=swap"
-              rel="stylesheet">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com">
+        <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&display=swap" rel="stylesheet">
         <style>
             * {
-                font-family: 'Noto Sans KR', sans-serif;
+                font-family: 'Do Hyeon', sans-serif;
             }
 
             .hero-head {
@@ -42,7 +46,7 @@
             }
 
             .margin {
-                margin-bottom: 300px;
+                margin-bottom: 100px;
             }
 
         </style>
@@ -70,99 +74,111 @@
                 })
             }
 
-
-            function showDetail(name) {
-                $.ajax({
-                    type: "GET",
-                    url: "/detail",
-                    data: {name: name},
-                    success: function (response) {
-                        if (response['result'] == 'success') {
-                            let container = document.getElementById('map'); //지도 표시 div
-                            let options = {
-                                center: new kakao.maps.LatLng(37.547039703021895, 126.91316778932088), //지도의 중심좌표
-                                level: 13 //지도의 확대 레벨
-                            };
-
-                            let map = new kakao.maps.Map(container, options); // 지도를 생성합니다
-
-                            // 마커를 표시할 위치와 title 객체 배열입니다
-                            let positions = [
-                                {
-                                    content: '<div style="padding:5px;">${spot1}</div>',
-                                    latlng: new kakao.maps.LatLng(${spot1_lat}, ${spot1_lng})
-                                },
-                                {
-                                    content: '<div style="padding:5px;">화규 합정점</div>',
-                                    latlng: new kakao.maps.LatLng(37.549219152218036, 126.91748776892605)
-                                },
-                                {
-                                    content: '<div style="padding:5px;">냉장고 상수점</div>',
-                                    latlng: new kakao.maps.LatLng(37.546727289228386, 126.9227342400898)
-                                },
-
-                            ];
-
-                            // 마커 이미지의 이미지 주소입니다
-                            let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-
-                            for (let i = 0; i < positions.length; i++) {
-
-                                // 마커 이미지의 이미지 크기 입니다
-                                let imageSize = new kakao.maps.Size(24, 35);
-
-                                // 마커 이미지를 생성합니다
-                                let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-
-                                // 마커를 생성합니다
-                                let marker = new kakao.maps.Marker({
-                                    map: map, // 마커를 표시할 지도
-                                    position: positions[i].latlng, // 마커를 표시할 위치
-                                    //title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-                                    image: markerImage, // 마커 이미지
-                                    //clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
-                                });
-
-
-                                // 마커에 표시할 인포윈도우를 생성합니다
-                                let infowindow = new kakao.maps.InfoWindow({
-                                    content: positions[i].content, // 인포윈도우에 표시할 내용
-
-                                });
-
-                                // 마커에 클릭이벤트를 등록합니다
-                                kakao.maps.event.addListener(marker, 'click', makeClickListener(map, marker, infowindow));
-
-                            }
-
-                            function makeClickListener(map, marker, infowindow) {
-                                return function () {
-                                    infowindow.open(map, marker);
-                                };
-                            }
-
-                            function makeCloseListener(infowindow) {
-                                return function () {
-                                    infowindow.close();
-                                };
-                            }
-                        }
-                    }
-                })
-            }
-
             function makeThemeCard(name, emoji, spot1, spot2, spot3) {
-                let tempHtml = `<div class="tile is-parent" onclick="showDetail('${name}')">
-                                    <article class="tile is-child box">
-                                        <p class="subtitle">${emoji}</p>
-                                        <p class="subtitle has-text-black">${name}
-                                        </p>
-                                    </article>
-                                </div>`;
+                let tempHtml = `<div class="column is-one-third" onclick="showDetail('${name}')">
+                        <div class="tile is-parent">
+                            <article class="tile is-child box">
+                                <p class="subtitle">${emoji}</p>
+                                <p class="subtitle has-text-black">${name}</p>
+                            </article>
+                        </div>
+                    </div>`;
+
                 console.log(tempHtml);
 
                 $('#theme-card').append(tempHtml);
             }
+
+            function showDetail(name) {
+                $.ajax({
+                        type: "GET",
+                        url: "/detail",
+                        data: {name: name},
+                        success: function (response) {
+                            if (response['result'] == 'success') {
+                                let container = document.getElementById('map'); //지도 표시 div
+                                let options = {
+                                    center: new kakao.maps.LatLng(response['detail']['spot2_lat'], response['detail']['spot2_lng']), //지도의 중심좌표
+                                    level: 6 //지도의 확대 레벨
+                                };
+
+                                let map = new kakao.maps.Map(container, options); // 지도를 생성합니다
+
+                                // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
+                                let zoomControl = new kakao.maps.ZoomControl();
+                                map.addControl(zoomControl, kakao.maps.ControlPosition.RIGHT);
+                                // 마커를 표시할 위치와 title 객체 배열입니다
+                                let positions = [
+                                        {
+                                            content: `<div style="width:150px;text-align:center;padding:6px 0;">${response['detail']['spot1']}</div>`,
+                                            latlng: new kakao.maps.LatLng(response['detail']['spot1_lat'], response['detail']['spot1_lng'])
+
+                                        }
+                                        ,
+                                        {
+                                            content: `<div style="width:150px;text-align:center;padding:6px 0;">${response['detail']['spot2']}</div>`,
+                                            latlng: new kakao.maps.LatLng(response['detail']['spot2_lat'], response['detail']['spot2_lng'])
+                                        }
+                                        ,
+                                        {
+                                            content: `<div style="width:150px;text-align:center;padding:6px 0;">${response['detail']['spot3']}</div>`,
+                                            latlng: new kakao.maps.LatLng(response['detail']['spot3_lat'], response['detail']['spot3_lng'])
+                                        }
+                                        ,
+
+                                    ]
+                                ;
+
+                                // 마커 이미지의 이미지 주소입니다
+                                let imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
+
+                                for (let i = 0; i < positions.length; i++) {
+
+                                    // 마커 이미지의 이미지 크기 입니다
+                                    let imageSize = new kakao.maps.Size(24, 35);
+
+                                    // 마커 이미지를 생성합니다
+                                    let markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
+
+                                    // 마커를 생성합니다
+                                    let marker = new kakao.maps.Marker({
+                                        map: map, // 마커를 표시할 지도
+                                        position: positions[i].latlng, // 마커를 표시할 위치
+                                        //title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+                                        image: markerImage, // 마커 이미지
+                                        //clickable: true // 마커를 클릭했을 때 지도의 클릭 이벤트가 발생하지 않도록 설정합니다
+                                    });
+
+
+                                    // 마커에 표시할 인포윈도우를 생성합니다
+                                    let infowindow = new kakao.maps.InfoWindow({
+                                        content: positions[i].content, // 인포윈도우에 표시할 내용
+                                        removable: true
+                                    });
+
+                                    // 마커에 클릭이벤트를 등록합니다
+                                    kakao.maps.event.addListener(marker, 'click', makeClickListener(map, marker, infowindow));
+
+                                }
+
+                                function makeClickListener(map, marker, infowindow) {
+                                    return function () {
+                                        infowindow.open(map, marker);
+                                    };
+                                }
+
+                                function makeCloseListener(infowindow) {
+                                    return function () {
+                                        infowindow.close();
+                                    };
+                                }
+                            }
+                        }
+                    }
+                )
+            }
+
+
         </script>
     </head>
 
@@ -185,10 +201,10 @@
             <div class="hero-body">
                 <div class="container has-text-centered" style="margin-bottom: 100px;">
                     <h2 class="subtitle">
-                        지금 바로 떠나자!
+                        내 스타일대로! 내 마음대로!
                     </h2>
                     <h1 class="title is-size-1">
-                        테마 여행
+                        나만의 여행 큐레이션
                     </h1>
 
                 </div>
@@ -204,33 +220,23 @@
                 </div>
             </div>
             <div class="wrap">
-                <div class="container is-multiline">
-                    <div id="theme-card" class="tile is-ancestor">
-                        <!--?<div class="tile is-parent">
+                <div id="theme-card" class="columns is-multiline">
+                    <!--?<div class="column is-one-third">
+                        <div class="tile is-parent">
                             <article class="tile is-child box">
                                 <p class="subtitle">💛💛</p>
                                 <p class="subtitle has-text-black">What is up?</p>
                             </article>
                         </div>
-                        <div class="tile is-parent">
-                            <article class="tile is-child box">
-                                <p class="subtitle">💛💛</p>
-                                <p class="subtitle has-text-black">Bar</p>
-                            </article>
-                        </div>
-                        <div class="tile is-parent">
-                            <article class="tile is-child box">
-                                <p class="subtitle">💌</p>
-                                <p class="subtitle has-text-black">Bar</p>
-                            </article>
-                        </div>-->
+                    </div>-->
 
-                    </div>
                 </div>
-            </div>
-            <div id="map" style="width:1500px;height:740px;margin:auto;"></div>
 
+            </div>
+            <div id="map" style="width:1000px;height:500px;margin:auto;"></div>
             <div class="margin"></div>
+
         </section>
+
     </body>
 </html>

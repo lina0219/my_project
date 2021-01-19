@@ -48,7 +48,7 @@ def read_themes():
 @app.route('/detail', methods=['GET'])
 def read_detail():
     name = request.args.get('name')
-    detail = db.new_theme.find_one({name: name}, {'_id': 0})
+    detail = db.new_theme.find_one({'name': name}, {'_id': 0})
     return jsonify({'result': 'success', 'detail': detail})
 
 

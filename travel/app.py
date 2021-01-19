@@ -1,5 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 from pymongo import MongoClient
+import json
 
 app = Flask(__name__)
 
@@ -48,9 +49,16 @@ def read_themes():
 @app.route('/detail', methods=['GET'])
 def read_detail():
     name = request.args.get('name')
-    detail = db.new_theme.find_one({name: name}, {'_id': 0})
+    detail = db.new_theme.find_one({'name': name}, {'_id': 0})
+
     return jsonify({'result': 'success', 'detail': detail})
 
+@app.route('/emoji')
+def get_data():
+  return app.send_static_file('full-emoji-list.json')
+
+with open('C:\\Users\\LG\\Desktop\\sparta\\my_project\\travel\\static\\full-emoji-list.json',encoding='UTF-8') as json_file:
+    json_data = json.load(json_file)
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)

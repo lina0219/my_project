@@ -10,8 +10,8 @@
 
         <!-- 구글폰트 -->
         <link rel="preconnect" href="https://fonts.gstatic.com">
-        <link href="https://fonts.googleapis.com/css2?family=Jua&family=Nanum+Gothic+Coding:wght@700&family=Noto+Sans+KR:wght@300&display=swap"
-              rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Jua&display=swap" rel="stylesheet">
+
         <style>
             html {
                 height: 100%;
@@ -19,7 +19,7 @@
             }
 
             * {
-                font-family: 'Noto Sans KR', sans-serif;
+                font-family: 'Do Hyeon', sans-serif;
             }
 
             .wrap {
@@ -45,12 +45,12 @@
 
             function get2() {
                 $('#spot2-lat').val(lat);
-                $('#spot2-lng').val(lat);
+                $('#spot2-lng').val(lng);
             }
 
             function get3() {
                 $('#spot3-lat').val(lat);
-                $('#spot3-lng').val(lat);
+                $('#spot3-lng').val(lng);
             }
 
             function formCheck() {
@@ -139,20 +139,20 @@
 
                 <div class="field is-horizontal">
                     <div class="field-label is-normal">
-                        <label class="label">이모지</label>
+                        <label class="label">이모지 </label>
                     </div>
                     <div class="field-body">
-                        <div class="field is-narrow">
+                        <div class="field">
                             <div class="control">
-                                <div class="select is-fullwidth">
-                                    <select id="emoji">
-                                        <option value="none">선택</option>
-                                        <option value="😀">😀</option>
-                                        <option value="😁">😁</option>
-                                        <option value="😂">😂</option>
-                                    </select>
-                                </div>
+                                <input class="input emoji" type="text" placeholder="Normal sized input">
                             </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <div class="control">
+                            <button class="button is-info" onclick="get1()">
+                                확인
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -241,14 +241,26 @@
                 </div>
             </div>
         </section>
+        <script src="{{url_for('static', filename='fgEmojiPicker.js')}}"> </script>
+        <script>
+            new FgEmojiPicker({
+                trigger: ['button'],
+                position: ['bottom', 'right'],
+                preFetch: true,
+                insertInto: document.querySelector('input.emoji'),
+                emit(obj, triggerElement) {
+                    console.log(obj, triggerElement);
+                }
+            });
+        </script>
         <script type="text/javascript"
                 src="//dapi.kakao.com/v2/maps/sdk.js?appkey=ef40c66fba33237283cfb59ce3a907aa"></script>
         <script>
             let lat, lng; // Irvin: 전역 변수 선언
             let mapContainer = document.getElementById('map'), // 지도를 표시할 div
                 mapOption = {
-                    center: new kakao.maps.LatLng(33.450701, 126.570667), // 지도의 중심좌표
-                    level: 3 // 지도의 확대 레벨
+                    center: new kakao.maps.LatLng(37.54899821499818, 126.91733327734288), // 지도의 중심좌표
+                    level: 10 // 지도의 확대 레벨
                 };
 
             let map = new kakao.maps.Map(mapContainer, mapOption); // 지도를 생성합니다
